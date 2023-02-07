@@ -8,11 +8,15 @@ class Person:
         self.job="Lecturer"
     def __repr__(self) -> str:
         return str(self.__dict__)
+
 person = Person()
 #print(f"{person}")
 #print(f"{person}") #shows memory location
-#print(f"{Person.__dict__}")
+#print(f"{Person.__dict__}") #showing objects in class level
+
+"""deleting objects
 person.course = "IS601"
-#del person.course
+del person.course
 print(f"{person}")
+"""
 
