@@ -32,11 +32,13 @@ if __name__== "__main__":
         nums = response.split("+")
         r = calc.add(int(nums[0]), int(nums[1]))
         print(f"Answer: {r}")
+    
     if "-" in response:
         print("We're subtracting: ")
         nums = response.split("-")
         r = calc.sub(int(nums[0]), int(nums[1]))
         print(f"Answer: {r}")
+    
     if "*" in response:
         print("We're multyplying: ")
         nums = response.split("*")
