@@ -54,17 +54,22 @@ def list_tasks(_tasks):
 def add_task(name: str, description: str, due: str):
     """ Copies the TASK_TEMPLATE and fills in the passed in data then adds the task to the tasks list """
     task = TASK_TEMPLATE.copy() # don't delete this
-    # update lastActivity with the current datetime value
-    # set the name, description, and due date (all must be provided)
-    # due date must match one of the formats mentioned in str_to_datetime()
-    # add the new task to the tasks list
-    # output a message confirming the new task was added or if the addition was rejected due to missing data
+    task["lastActivity"] = datetime # update lastActivity with the current datetime value
+    task['name'] = name # set the name, description, and due date (all must be provided)
+    task['description'] = description # due date must match one of the formats mentioned in str_to_datetime()
+    task['due'] = due() # add the new task to the tasks list
+    print("New Task was made")# output a message confirming the new task was added or if the addition was rejected due to missing data
     # make sure save() is still called last in this function
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    tasks.append(task)
     save()
+    """UCID: np656 (2/19) the solution for this task was adding the name, description, and due date
+    as in a dict key value pair using task[key] = value"""
 
 def process_update(index):
     """ extracted the user input prompts to get task data then passes it to update_task() """
+    for i in range(len(tasks)):
+        pass 
     # get the task by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
     # show the existing value of each property where the TODOs are marked in the text of the inputs (replace the TODO related text)
@@ -84,7 +89,15 @@ def update_task(index: int, name: str, description:str, due: str):
     # output that the task was updated if any items were changed, otherwise mention task was not updated
     # make sure save() is still called last in this function
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    
+    task = TASK_TEMPLATE.copy()
+    task["lastActivity"] = datetime 
+    task['name'] = name 
+    task['description'] = description
+    task['due'] = due() 
+
+
+
+
     save()
 
 def mark_done(index):
@@ -100,12 +113,13 @@ def mark_done(index):
 
 def view_task(index):
     """ View more info about a specific task fetch by index """
+    if index in range(len(tasks)):
     # find task from list by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
     # utilize the given print statement when a task is found
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    task = {}
-    print(f"""
+        task = {}
+        print(f"""
         [{'x' if task['done'] else ' '}] Task: {task['name']}\n 
         Description: {task['description']} \n 
         Last Activity: {task['lastActivity']} \n
@@ -121,7 +135,10 @@ def delete_task(index):
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
     # make sure save() is still called last in this function
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    
+    if index in range(len(tasks)):
+        tasks[index].pop(index)
+        print("Task deleted.")
+
     save()
 
 def get_incomplete_tasks():
