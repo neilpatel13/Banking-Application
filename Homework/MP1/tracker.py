@@ -197,7 +197,7 @@ def delete_task(index):
         print("Invalid index. Task not deleted.")
         return
     # Remove the task from the list
-    del tasks[index + 1]
+    del tasks[index]
     print(f"Task at index {index} has been deleted.")
     # Save the updated task list
     save()
