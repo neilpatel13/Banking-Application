@@ -1,0 +1,7 @@
+# Created by pytest automatically.
+venv
+.idea
+.vscode
+__pycache__
+.DS_Store
+.pytest_cache
