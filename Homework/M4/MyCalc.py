@@ -31,6 +31,13 @@ class MyCalc:
             num2 = self._as_number(num2)
             self.ans = num1+num2
         return self.ans
+<<<<<<< HEAD
+=======
+        
+    """
+UCID: np656, Date: 2/272/3. This block is the add function, it adds two given numbers given from input.
+"""
+>>>>>>> fb4f51c935a0aa1450c6a606707ddd2596233ba0
 
     def sub(self, num1, num2):
         if num1 == "ans":
@@ -40,7 +47,13 @@ class MyCalc:
             num2 = self._as_number(num2)
             self.ans = num1-num2
         return self.ans
+<<<<<<< HEAD
 
+=======
+    """
+UCID: np656, Date: 2/272/3. This block is the sub function, it subtracts two given numbers given from input.
+"""
+>>>>>>> fb4f51c935a0aa1450c6a606707ddd2596233ba0
     def mult(self, num1, num2):
         if num1 == "ans":
             return self.mult(self.ans, num2)
@@ -49,7 +62,13 @@ class MyCalc:
             num2 = self._as_number(num2)
             self.ans = num1*num2
         return self.ans
+<<<<<<< HEAD
 
+=======
+    """
+UCID: np656, Date: 2/272/3. This block is the mult function, it multiply two given numbers given from input.
+"""
+>>>>>>> fb4f51c935a0aa1450c6a606707ddd2596233ba0
     def div(self, num1, num2):
         if num1 == "ans":
             return self.div(self.ans, num2)
@@ -61,7 +80,14 @@ class MyCalc:
             else:
                 self.ans = num1/num2
         return self.ans
+<<<<<<< HEAD
 
+=======
+    """
+UCID: np656, Date: 2/272/3. This block is the div function, it divides two given numbers given from input. It also checks if 
+there is a divison by 0 error, in which it prints an error that says can't divide by 0.
+"""
+>>>>>>> fb4f51c935a0aa1450c6a606707ddd2596233ba0
 
 if __name__ == '__main__':
     is_running = True
