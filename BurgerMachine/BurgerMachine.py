@@ -155,7 +155,9 @@ class BurgerMachine:
 
     def calculate_cost(self):
         # TODO add the calculation expression/logic for the inprogress_burger
-        return 10000
+        total_cost = sum(item.cost for item in self.inprogress_burger)
+        print(f"Total cost of burger: ${total_cost:.2f}")
+        #return 10000
 
     def run(self):
         try:
