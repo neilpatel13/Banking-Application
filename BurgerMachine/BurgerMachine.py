@@ -132,6 +132,8 @@ class BurgerMachine:
         else:
             self.pick_patty(patty)
 
+            
+
     def handle_toppings(self, toppings):
         if toppings == "done":
             self.currently_selecting = STAGE.Pay
@@ -141,7 +143,7 @@ class BurgerMachine:
     def handle_pay(self, expected, total):
         if self.currently_selecting != STAGE.Pay:
             raise InvalidStageException
-        if total == str(expected):
+        if total == str('{:,.2f}'.format(expected)):
             print("Thank you! Enjoy your burger!")
             self.total_burgers += 1
             self.total_sales += expected # only if successful
@@ -157,7 +159,7 @@ class BurgerMachine:
         # TODO add the calculation expression/logic for the inprogress_burger
         total_cost = sum(item.cost for item in self.inprogress_burger)
         print(f"Total cost of burger: ${total_cost:.2f}")
-        #return 10000
+        return total_cost
 
     def run(self):
         try:
@@ -177,7 +179,9 @@ class BurgerMachine:
                 expected = self.calculate_cost()
                 # show expected value as currency format
                 # require total to be entered as currency format
-                total = input(f"Your total is {expected}, please enter the exact value.\n")
+                expected_str = "${:,.2f}".format(expected)
+                total = input(f"Your total is {expected_str}, please enter the exact value.\n")
+                #total = input(f"Your total is {expected}, please enter the exact value.\n")
                 self.handle_pay(expected, total)
                 
                 choice = input("What would you like to do? (order or quit)\n")
@@ -190,22 +194,57 @@ class BurgerMachine:
             # quit
             print("Quitting the burger machine")
             sys.exit()
+        except OutOfStockException:
+            print(f"item is out of stock in {self.currently_selecting} stage.")
         # handle OutOfStockException
             # show an appropriate message of what stage/category was out of stock
+        
+        except NeedsCleaningException:
+            print("The machine needs cleaning. Please type 'clean' to trigger clean_machine().")
+            user_input = input().strip().lower()
+            if user_input == "clean":
+                self.clean_machine()
+                print("The machine has been cleaned.")
+            else:
+                print("Ignoring user input. The machine was not cleaned.")
         # handle NeedsCleaningException
             # prompt user to type "clean" to trigger clean_machine()
             # any other input is ignored
             # print a message whether or not the machine was cleaned
+        
+        except InvalidChoiceException:
+            print(f"Invalid choice in {self.currently_selecting} category.")
         # handle InvalidChoiceException
-            # show an appropriate message of what stage/category was the invalid choice was in
+            # show an appropriate message of what stage/category was the invalid chnoice was in
+        
+        except ExceededRemainingChoicesException:
+            print(f"You have already chosen the maximum number of {self.currently_selecting} ingredients.")
+            #print({self.currently_selecting.value})
+            chag = self.currently_selecting.value + 1
+            #print({chag})
+            self.currently_selecting = STAGE(chag)
+
+            #if self.currently_selecting != STAGE.Bun:
+            #    self.pick_patty()
+                
+            #if self.currently_selecting != STAGE.Patty:
+            #    self.pick_toppings()
+
+            #if self.currently_selecting != STAGE.Toppings:
+            #    self.currently_selecting = STAGE.Pay
+
         # handle ExceededRemainingChoicesException
             # show an appropriate message of which stage/category was exceeded
             # move to the next stage/category
+        
+        except InvalidPaymentException:
+            print("Input value doesn't match the expected value\n")
         # handle InvalidPaymentException
             # show an appropriate message
-        except:
+        
+        except Exception as e:
             # this is a default catch all, follow the steps above
-            print("Something went wrong")
+            print(f"Something went wrong: {e}")
         
         self.run()
 
