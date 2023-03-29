@@ -160,6 +160,7 @@ class BurgerMachine:
         total_cost = sum(item.cost for item in self.inprogress_burger)
         print(f"Total cost of burger: ${total_cost:.2f}")
         return total_cost
+#Neil Patel, UCID: np656 Date: 3/27
 
     def run(self):
         try:
@@ -198,7 +199,8 @@ class BurgerMachine:
             print(f"item is out of stock in {self.currently_selecting} stage.")
         # handle OutOfStockException
             # show an appropriate message of what stage/category was out of stock
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+        #This exception raises when the quantity of an ingredient runs out, resulting in being unable to ask for it when ordering.
         except NeedsCleaningException:
             print("The machine needs cleaning. Please type 'clean' to trigger clean_machine().")
             user_input = input().strip().lower()
@@ -211,12 +213,15 @@ class BurgerMachine:
             # prompt user to type "clean" to trigger clean_machine()
             # any other input is ignored
             # print a message whether or not the machine was cleaned
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+        #This exception is raised when there has been many orders done and the burger machine needs to be clean
         except InvalidChoiceException:
             print(f"Invalid choice in {self.currently_selecting} category.")
         # handle InvalidChoiceException
             # show an appropriate message of what stage/category was the invalid chnoice was in
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+        #This exception is raised when a user makes an invalid choice or selection when ordering.
+
         except ExceededRemainingChoicesException:
             print(f"You have already chosen the maximum number of {self.currently_selecting} ingredients.")
             #print({self.currently_selecting.value})
@@ -236,16 +241,20 @@ class BurgerMachine:
         # handle ExceededRemainingChoicesException
             # show an appropriate message of which stage/category was exceeded
             # move to the next stage/category
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+        #This exception is raised when the user exceeds the remaining choices or limit, such as selecting more ingredients than available.
+
         except InvalidPaymentException:
             print("Input value doesn't match the expected value\n")
         # handle InvalidPaymentException
             # show an appropriate message
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+        #This exception is raised when a payment method or transaction is invalid or cannot be processed.
         except Exception as e:
             # this is a default catch all, follow the steps above
             print(f"Something went wrong: {e}")
-        
+        #Neil Patel, UCID: np656 Date: 3/27
+
         self.run()
 
     def start(self):
