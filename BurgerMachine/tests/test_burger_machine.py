@@ -88,8 +88,8 @@ def test_add_toppings(machine):
         machine.handle_toppings("bbq")
     assert True
 '''Neil Patel, UCID: np656 date: 3/28
-This test was to test when adding patties to the order, an out of stock exception will rise when
-there is no more stock of a patty'''
+This test was to test when adding toppings to the order, an out of stock exception will rise when
+there is no more stock of a topping'''
 
 def test_patty_combo(machine):
     machine.reset()
