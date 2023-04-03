@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Edit Sample{% endblock %}
+{% block title %}Add Sample{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
@@ -18,11 +18,6 @@
             </div>
             <input type="submit" class="btn btn-primary" value="Update Sample" />
         </form>
-        {% if resp %}
-        <div id="output">
-            {{resp}}
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
