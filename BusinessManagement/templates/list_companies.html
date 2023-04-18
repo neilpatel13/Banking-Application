@@ -15,8 +15,12 @@
     #}
     <form method="GET">
         <div class="row">
-            {{country_state_selector(layout="horizontal")}}
-            {{sort_filter(cols=[...])}}
+            <div class="col-md-3">
+                <label for="company_name">Company Name</label>
+                <input type="text" name="name" id="company_name" class="form-control" value="{{ request.args.get('name') }}">
+            </div>
+            {{country_state_selector(layout="horizontal", country=request.args.get('country'), state=request.args.get('state'))}}
+            {{ sort_filter(cols=column_choices) }}
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -30,23 +34,30 @@
             {% if rows and rows|length > 0 %}
             <thead>
                 <tr class="text-capitalize">
-                    {# generate th tags for each column to display #}
-                    {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-
+                    <th>Company Name</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>Website</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {# generate tr with td tags for each piece of data #}
-                {# if the td is for website, display it as a link where the text is "website" and the url is the
-                website url #}
-                {# in the last column add the following
-                a view button that passes the company id to employee search (this will be a company employee
-                directory) also pass company_name as an argument
-                an edit button that passes the company id to company edit
-                a delete button that passes the company id and the request args to the company delete route
-                #}
-
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row['name'] }}</td>
+                    <td>{{ row['country'] }}</td>
+                    <td>{{ row['state'] }}</td>
+                    <td>{% if row['website'] %}<a href="{{ row['website'] }}" target="_blank">Website</a>{% endif %}</td>
+                    <td>
+                        <a href="{{ url_for('company_employees', company_id=row['id'], company_name=row['name']) }}" class="btn btn-primary">View</a>
+                        <a href="{{ url_for('edit_company', company_id=row['id']) }}" class="btn btn-secondary">Edit</a>
+                        <form action="{{ url_for('delete_company', company_id=row['id']) }}" method="POST" class="d-inline-block">
+                            <input type="hidden" name="args" value="{{ request.args.to_dict(flat=false) }}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this company?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
             {% else %}
             <tbody>

@@ -16,13 +16,24 @@
         limit (default 10)
         ensure all fields prefill with request arg data if provided
         #}
-
         <div class="row">
             <div class="col">
-                <label class="visually-hidden" for="company">Company</label>
-                {{company_dropdown(request.args.get("company"))}}
+                <label for="first_name">First Name</label>
+                <input type="text" name="fn" id="first_name" class="form-control" value="{{ request.args.get('fn') }}">
             </div>
-            {{sort_filter(cols=[...])}}
+            <div class="col">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="ln" id="last_name" class="form-control" value="{{ request.args.get('ln') }}">
+            </div>
+            <div class="col">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" class="form-control" value="{{ request.args.get('email') }}">
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="company">Company</label>
+                {{ company_dropdown(request.args.get("company")) }}
+            </div>
+            {{ sort_filter(cols=column_choices) }}
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -37,17 +48,38 @@
             <tr class="text-capitalize">
                 {# generate th tags for each column to display #}
                 {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-
+                {% for col in cols %}
+                <th>{{ col|replace("_", " ") }}</th>
+                {% endfor %}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {# generate tr with td tags for each piece of data #}
+            {% for row in rows %}
+            <tr>
+                {% for col in cols %}
+                <td>{{ row[col] }}</td>
+                {% endfor %}
+                <td>
+                    {# generate tr with td tags for each piece of data #}
             {# in the last column add the following
             an edit button that passes the employee id to employee edit
             a delete button that passes the employee id and the request args to the employee delete route
             #}
-
+                    <a href="{{ url_for('employee_edit', id=row['id']) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="{{ url_for('employee_delete', id=row['id']) }}" method="POST" style="display:inline-block;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        {% for arg in request.args %}
+                        {% if arg != 'page' %}
+                        <input type="hidden" name="{{ arg }}" value="{{ request.args[arg] }}">
+                        {% endif %}
+                        {% endfor %}
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
         {% else %}
         <tbody>
@@ -57,5 +89,6 @@
         </tbody>
         {% endif %}
     </table>
+    
 </div>
 {% endblock %}
