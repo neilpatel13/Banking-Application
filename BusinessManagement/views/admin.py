@@ -50,13 +50,13 @@ def importCSV():
             csv_reader = csv.DictReader(stream)
             for row in csv_reader:
                 company = {
-                    'name': row.get("name"),
+                    'name': row.get("company_name"),
                     'address': row.get("address"),
                     'city': row.get("city"),
                     'state': row.get("state"),
                     'zip': row.get("zip"),
                     'country': row.get("country"),
-                    'website':row.get("website")
+                    'website':row.get("web")
                 }
                 
                 if None not in company.values():

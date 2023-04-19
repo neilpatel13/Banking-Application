@@ -9,8 +9,18 @@ def search(): #NeilPatel UCID: NP656 DATE: 4/14
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve id, name, address, city, country, state, zip, website, employee count as employees for the company
     # don't do SELECT *    
-    query = """SELECT IS601_MP3_Companies.id, IS601_MP3_Companies.name, IS601_MP3_Companies.address, IS601_MP3_Companies.city, IS601_MP3_Companies.country, IS601_MP3_Companies.state, IS601_MP3_Companies.zip, IS601_MP3_Companies.website, 
-            COUNT(employee.id) as employees FROM IS601_MP3_Companies company LEFT JOIN employee IS601_MP3_Employees ON IS601_MP3_Companies.id = IS601_MP3_Employees.company_id WHERE 1=1"""
+    query = """
+            SELECT IS601_MP3_Companies.id, IS601_MP3_Companies.name, IS601_MP3_Companies.address, IS601_MP3_Companies.city, 
+                IS601_MP3_Companies.country, IS601_MP3_Companies.state, IS601_MP3_Companies.zip, IS601_MP3_Companies.website,
+                (SELECT COUNT(IS601_MP3_Employees.id) FROM IS601_MP3_Employees WHERE IS601_MP3_Employees.company_id = IS601_MP3_Companies.id) AS employees 
+            FROM IS601_MP3_Companies 
+            WHERE 1=1 
+                AND (%(name)s IS NULL OR IS601_MP3_Companies.name LIKE CONCAT('%%', %(name)s, '%%'))
+                AND (%(country)s IS NULL OR IS601_MP3_Companies.country = %(country)s)
+                AND (%(state)s IS NULL OR IS601_MP3_Companies.state = %(state)s)
+            ORDER BY %(column)s %(order)s 
+            LIMIT %(limit)s
+            """
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
     # TODO search-2 get name, country, state, column, order, limit request args
