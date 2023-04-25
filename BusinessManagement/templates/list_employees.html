@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %}Employee Directory{% endblock %}
+{% block content %}
+{% from "company_dropdown.html" import company_dropdown %}
+{% from "sort_filter.html" import sort_filter %}
+<div class="container-fluid">
+    <div class="h1 text-center">{{request.args.get("company_name","")}} Employee Directory</div>
+    <form method="GET">
+        <div class="row">
+            <div class="col">
+                <label class="visually-hidden" for="company">Company</label>
+                {{company_dropdown(request.args.get("company"))}}
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="fn">First Name</label>
+                <input type="text" class="form-control" id="fn" name="fn" placeholder="First Name" value="{{ request.args.get('fn') }}">
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="ln">Last Name</label>
+                <input type="text" class="form-control" id="ln" name="ln" placeholder="Last Name" value="{{ request.args.get('ln') }}">
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="email">Email</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{ request.args.get('email') }}">
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="sort">Sort By</label>
+                <select class="form-select" id="sort" name="sort">
+                    {% for col in allowed_columns %}
+                    <option value="{{ col }}" {% if request.args.get('sort') == col %}selected{% endif %}>{{ col|replace('_', ' ')|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="order">Order</label>
+                <select class="form-select" id="order" name="order">
+                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
+                </select>                
+            </div>
+            <div class="col">
+                <label class="visually-hidden" for="limit">Limit</label>
+                <select class="form-select" id="limit" name="limit">
+                    <option value="10" {% if request.args.get('limit') == '10' %}selected{% endif %}>10</option>
+                    <option value="25" {% if request.args.get('limit') == '25' %}selected{% endif %}>25</option>
+                    <option value="50" {% if request.args.get('limit') == '50' %}selected{% endif %}>50</option>
+                    <option value="100" {% if request.args.get('limit') == '100' %}selected{% endif %}>100</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Filter">
+            </div>
+            <div class="col">
+                <a href="?" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+        
+    <table class="table">
+        {% if rows and rows|length > 0 %}
+            <thead>
+                <tr class="text-capitalize">
+                    {# generate th tags for each column to display #}
+                    {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
+                    {% for col in rows[0] %}
+                        <th>{{ col|replace("_", " ") }}</th>
+                    {% endfor %}
+                    <th>Actions</th>            
+                </tr>
+            </thead>
+            <tbody>
+                {# generate tr with td tags for each piece of data #}
+                {% for row in rows %}
+                    <tr>                
+                        {% for v in row.values() %} 
+                        <td>{{v}}</td>
+                        {% endfor %}
+                        <td>
+                            <a href="{{ url_for('employee.edit', id=row.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                            <a href="{{ url_for('employee.delete', id=row.id) }}?{{ request.args }}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <tbody>
+                <tr>
+                    <td colspan="100%">No results to show</td>
+                </tr>
+            </tbody>
+        {% endif %}
+    </table>      
+    
+</div>
+{% endblock %}
