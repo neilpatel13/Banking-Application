@@ -74,7 +74,7 @@ def search(): #NeilPatel UCID: NP656 DATE: 4/14
     return render_template("list_companies.html", rows=rows, column_choices=column_choices)
 
 
-
+#Neil Patel, UCID: NP656 DOC 4/15
 @company.route("/add", methods=["GET","POST"])
 def add():
     if request.method == "POST":
@@ -86,6 +86,7 @@ def add():
         country = request.form.get("country")
         zip_code = request.form.get("zip")
         website = request.form.get("website")
+#Neil Patel, UCID: NP656 DOC 4/15
 
         # TODO add-2 name is required (flash proper error message)
         if not name:
@@ -102,7 +103,8 @@ def add():
         # TODO add-5 state is required (flash proper error message)
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
         # hint see geography.py and pycountry documentation
-        
+        #Neil Patel, UCID: NP656 DOC 4/15
+
         if not state:
             flash("Please provide a state.", "danger")
             has_error = True
@@ -118,6 +120,7 @@ def add():
                 print(e)
                 flash("Error with states", "danger")
                 has_error = True
+#Neil Patel, UCID: NP656 DOC 4/15
 
         # TODO add-6 country is required (flash proper error message)
         # TODO add-6a country should be a valid country mentioned in pycountry
@@ -131,6 +134,7 @@ def add():
             except KeyError:
                 flash("Please provide a valid country.", "danger")
                 has_error = True
+#Neil Patel, UCID: NP656 DOC 4/15
 
         if not zip_code:
             flash("Please provide a zip code.", "danger")
@@ -155,7 +159,8 @@ def add():
                 print(e)
                 flash(str(e), "danger")
 
-        
+        #Neil Patel, UCID: NP656 DOC 4/15
+
     return render_template("add_company.html")
 
 
@@ -164,6 +169,7 @@ def add():
 
 
 
+#Neil Patel, UCID: NP656 DOC 4/15
 
 
 @company.route("/edit", methods=["GET", "POST"])
@@ -201,6 +207,8 @@ def edit():
             if not state:
                 flash("Please provide a state.", "danger")
                 has_error = True
+                #Neil Patel, UCID: NP656 DOC 4/15
+
             else:
                 try:
                     subdivisions = pycountry.subdivisions.get(country_code=country)
@@ -219,6 +227,8 @@ def edit():
             if not country:
                 flash("Please provide a country.", "danger")
                 has_error = True
+                #Neil Patel, UCID: NP656 DOC 4/15
+
             else:
                 try:
                     pycountry.countries.get(alpha_2=country)
@@ -240,6 +250,7 @@ def edit():
             data["country"] = country
             data["zip"] = zip_code
             data["website"] = website
+#Neil Patel, UCID: NP656 DOC 4/15
 
             if not has_error:
                 try:
@@ -257,6 +268,8 @@ def edit():
                     print(f"{e}")
                     flash(str(e), "danger")
                     flash("Error has occured, try again later, error")
+        #Neil Patel, UCID: NP656 DOC 4/15
+
         row = {}
         try:
             # TODO edit-11 fetch the updated data
@@ -275,10 +288,12 @@ def edit():
     # TODO edit-13 pass the company data to the render template
     return render_template("edit_company.html", company=row)
 
+#Neil Patel, UCID: NP656 DOC 4/15
 
 
 
 
+#Neil Patel, UCID: NP656 DOC 4/15
 
 
 @company.route("/company/delete/<int:id>", methods=["GET"])
@@ -294,7 +309,8 @@ def delete(id):
         """, id)
         if result.status:
             print("unallocated employees")
-        
+        #Neil Patel, UCID: NP656 DOC 4/15
+
         # TODO delete-1 delete company by id (unallocate any employees see delete-5)
         result = DB.delete("DELETE FROM IS601_MP3_Companies WHERE id = %s", id)
         if result.status:
@@ -308,6 +324,7 @@ def delete(id):
         flash("Error has occured, try again later", "warning")
     # TODO delete-2 redirect to company search
     return redirect(url_for('company.search'))
+#Neil Patel, UCID: NP656 DOC 4/15
 
     # TODO delete-3 pass all argument except id to this route
     # TODO delete-4 ensure a flash message shows for successful delete

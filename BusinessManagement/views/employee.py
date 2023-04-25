@@ -65,6 +65,8 @@ def search():
         # TODO search-10 make message user friendly
         flash(e, "error")
         flash("Error has occured, try again later", "warning")
+        print(e)
+#Neil Patel UCID: NP656, DOC: 4/23
 
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
@@ -117,6 +119,7 @@ def add():
             except Exception as e:
                 # TODO add-7 make message user friendly
                 flash(str(e), "danger")
+                print(e)
                 flash("Invalid", "danger")
 
     return render_template("add_employee.html")
@@ -175,6 +178,7 @@ def edit():
                     # TODO edit-7 make this user-friendly
                     flash("Error, try again later", "danger")
                     flash(e, "danger")
+                    print(e)
         row = {}
         try:
             # TODO edit-8 fetch the updated data 
@@ -190,6 +194,8 @@ def edit():
             # TODO edit-9 make this user-friendly
             flash("Error", "danger")
             flash(str(e), "danger")
+            print(e)
+
     # TODO edit-10 pass the employee data to the render template
     return render_template("edit_employee.html", employee=row)
 
@@ -211,4 +217,6 @@ def delete(id):
 
     except Exception as e:
         flash(str(e), "danger")
+        print(e)
+
     # TODO delete-3 pass all argument except id to this route

@@ -26,8 +26,11 @@
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ employee.email }}" required>
-            </div>            
-            {{ company_dropdown(employee.company) }}
+            </div>
+            </div>
+                <label for="company">Company</label>
+            </div>
+                {{ company_dropdown(employee.company) }}
             <input type="submit" class="btn btn-primary" value="Save Employee" />
         </form>
     </div>

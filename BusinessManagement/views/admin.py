@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from sql.db import DB
 import traceback
 admin = Blueprint('admin', __name__, url_prefix='/admin')
+        #Neil Patel UCID: NP656, DOC: 4/18
 
 @admin.route("/import", methods=["GET","POST"])
 def importCSV():
@@ -36,6 +37,8 @@ def importCSV():
                         zip=values(zip),
                         website=values(website)
             """
+                    #Neil Patel UCID: NP656, DOC: 4/18
+
             # DON'T EDIT
             employee_query = """
              INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
@@ -44,6 +47,8 @@ def importCSV():
                         last_name = %(last_name)s, email = %(email)s, 
                         company_id = (SELECT id FROM IS601_MP3_Companies WHERE name=%(company_name)s LIMIT 1)
             """
+                    #Neil Patel UCID: NP656, DOC: 4/18
+
             # Note: this reads the file as a stream instead of requiring us to save it
             # TODO importcsv-2 read the csv file stream as a dict 
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
@@ -58,7 +63,8 @@ def importCSV():
                     'country': row.get("country"),
                     'website':row.get("web")
                 }
-                
+                        #Neil Patel UCID: NP656, DOC: 4/18
+
                 if None not in company.values():
                     companies.append(company)
                 # todo remove 
@@ -77,7 +83,8 @@ def importCSV():
 
                 if None not in employee.values():
                     employees.append(employee)
-               
+                       #Neil Patel UCID: NP656, DOC: 4/18
+
             if len(companies) > 0:
                 print(f"Inserting or updating {len(companies)} companies")
                 try:
@@ -87,7 +94,8 @@ def importCSV():
                     traceback.print_exc()
                     print(e)
                     flash("There was an error loading in the csv data", "danger")
-            
+                    #Neil Patel UCID: NP656, DOC: 4/18
+
             else:
                 traceback.print_exc()
                 print("error")
@@ -113,3 +121,4 @@ def importCSV():
                 print(e)
                 flash("There was an error counting session queries", "danger")
     return render_template("upload.html")
+        #Neil Patel UCID: NP656, DOC: 4/18

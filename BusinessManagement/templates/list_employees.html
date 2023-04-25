@@ -36,7 +36,7 @@
                 <select class="form-select" id="order" name="order">
                     <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
                     <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
-                </select>
+                </select>                
             </div>
             <div class="col">
                 <label class="visually-hidden" for="limit">Limit</label>
