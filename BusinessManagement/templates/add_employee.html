@@ -6,18 +6,22 @@
     <div class="h1">Add Employee</div>
     <div>
         <form method="POST">
-            {#
-            generate fields with proper types for
-            first_name (required)
-            last_name (required)
-            email (required)
-            if a validation error occurs, the inserted form data should persist
-            #}
-
-            {# use the below for company selection #}
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" value="{{ request.form.get('first_name') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" value="{{ request.form.get('last_name') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" value="{{ request.form.get('email') }}" required>
+            </div>
             {{ company_dropdown() }}
-            <input type="submit" class="btn btn-primary" value="Save Employee" />
+            <button type="submit" class="btn btn-primary">Create Employee</button>
         </form>
+        
     </div>
 </div>
 {% endblock %}
