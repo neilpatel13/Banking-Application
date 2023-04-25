@@ -1,0 +1,11 @@
+{% macro company_dropdown(val="") %}
+{% set comps = get_companies() %}
+{# TODO DO NOT EDIT #}
+<select class="form-select mb-3" name="company" value="{{val or ''}}">
+    <option value="">No Company</option>
+    {% for c in comps %}
+    {# example of using external data setting and casting #}
+    <option {{'selected' if val|string==c['id']|string}} value="{{c['id']}}">{{c['name']}}</option>
+    {% endfor %}
+</select>
+{% endmacro %}

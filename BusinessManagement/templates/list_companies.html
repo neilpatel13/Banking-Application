@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Company Directory{% endblock %}
+{% block content %}
+{% from "country_state_selector.html" import country_state_selector %}
+{% from "sort_filter.html" import sort_filter %}
+<div class="container-fluid">
+    <div class="h1 text-center">Company Directory</div>
+    {# TODO
+    build a horizontal filter/sort form with
+    name (show as company name but name field should be name)
+    country/state (provided)
+    sort/order (using allowed_columns and provided partial template)
+    limit (default 10)
+    ensure all fields prefill with request arg data if provided
+    #}
+    <form method="GET">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="company_name">Company Name</label>
+                <input type="text" name="name" id="company_name" class="form-control" value="{{ request.args.get('name') }}">
+            </div>
+            {{country_state_selector(layout="horizontal", country=request.args.get('country'), state=request.args.get('state'))}}
+            {{ sort_filter(cols=column_choices) }}
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Filter" />
+            </div>
+            <div class="col">
+                <a href="?" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            {% if rows and rows|length > 0 %}
+            <thead>
+                <tr class="text-capitalize">
+                    <th>Company Name</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>Website</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.address }}</td>
+                    <td>{{ row.city }}</td>
+                    <td>{{ row.country }}</td>
+                    <td>{{ row.state }}</td>
+                    <td>{{ row.zip }}</td>
+                    <td>{% if row.website %}<a href="{{ row.website }}" target="_blank">website</a>{% endif %}</td>
+                    <td>
+                        <a href="{{ url_for('employee.search', company_id=row.id, company_name=row.name) }}" class="btn btn-primary btn-sm">View</a>
+                        <a href="{{ url_for('company.edit', id=row.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{{ url_for('company.delete', id=row.id, **request.args) }}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+            {% else %}
+            <tbody>
+                <tr>
+                    <td colspan="100%">No results to show</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}
