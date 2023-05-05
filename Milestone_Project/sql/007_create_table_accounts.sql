@@ -7,5 +7,4 @@ CREATE TABLE IF NOT EXISTS IS601_Accounts(
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES IS601_Users(id),
-    check((id > 0 && balance >= 0) || id == -1)),
-);
+    check((account_number != '000000000000' and balance >= 0) or account_number = '000000000000'))

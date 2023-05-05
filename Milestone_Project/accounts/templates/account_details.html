@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+{% block title %}Create Account{% endblock %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="text-center">Account Details</h1>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>Account Number</th>
+        <td>{{ account_details["account_number"] }}</td>
+    </tr>
+    <tr>
+        <th>Account Type</th>
+        <td>{{ account_details["account_type"] }}</td>
+    </tr>
+    <tr>
+        <th>Balance</th>
+        <td>{{ account_details["balance"] }}</td>
+    </tr>
+    <tr>
+        <th>Opened/Created Date</th>
+        <td>{{ account_details["created"] }}</td>
+    </tr>
+</table>
+
+<style>
+    table {
+        margin-top: 20px;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #ddd;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+        <h2>Transaction History</h2>
+        <style>
+            h2 {
+            text-align: center;
+            }
+        </style>
+        <form method="get" action="">
+            <div class="row mb-3">
+                <div class="form-group col-3">
+                    <label for="from_date">From:</label>
+                    <input type="date" class="form-control" id="from_date" name="from_date"
+                        value="{{ request.args.get('from_date') }}">
+                </div>
+                <div class="form-group col-3">
+                    <label for="to_date">To:</label>
+                    <input type="date" class="form-control" id="to_date" name="to_date"
+                        value="{{ request.args.get('to_date') }}">
+                </div>
+                <div class="form-group col-3">
+                    <label for="type">Transaction Type:</label>
+                    <select class="form-control" id="type" name="type">
+                        <option value="">All</option>
+                        <option value="deposit" {% if request.args.get('type')=='deposit' %} selected {% endif %}>
+                            Deposit
+                        </option>
+                        <option value="withdraw" {% if request.args.get('type')=='withdraw' %} selected {% endif %}>
+                            Withdraw</option>
+                        <option value="transfer" {% if request.args.get('type')=='transfer' %}selected{% endif %}>
+                            Transfer</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped">
+            <tr>
+                <th>Source Account</th>
+                <th>Destination Account</th>
+                <th>Transaction Type</th>
+                <th>Balance Change</th>
+                <th>Expected Total</th>
+                <th>Memo</th>
+                <th>Created Date</th>
+            </tr>
+            {% for transaction in paginator.get_items() %}
+            <tr>
+                <td>{{ transaction["account_src"] }}</td>
+                <td>{{ transaction["account_dest"] }}</td>
+                <td>{{ transaction["transaction_type"] }}</td>
+                <td>{{ transaction["balance_change"] }}</td>
+                <td>{{ transaction["expected_total"] }}</td>
+                <td>{{ transaction["memo"] }}</td>
+                <td>{{ transaction["created"] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <nav>
+            <ul class="pagination">
+                {% if paginator.has_prev() %}
+                <li class="page-item"><a class="page-link"
+                        href="?from_date={{request.args.get('from_date','')}}& to_date={{request.args.get('to_date','')}}&type={{request.args.get('type','')}}&page={{paginator.page-1}}">Previous</a>
+                </li>
+                {% endif %}
+                {% for page in paginator.pages%}
+                <li class="page-item"><a class="page-link"
+                        href="?from_date={{request.args.get('from_date','')}}& to_date={{request.args.get('to_date','')}}&type={{request.args.get('type','')}}&page={{page}}">{{page}}</a>
+                </li>
+                {% endfor %}
+                {% if paginator.has_next() %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?from_date={{request.args.get('from_date','')}}& to_date={{request.args.get('to_date','')}}&type={{request.args.get('type','')}}&page={{paginator.page+1}}">Next
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

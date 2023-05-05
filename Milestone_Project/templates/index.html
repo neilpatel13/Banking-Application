@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="h1 text-center text-warning">Bank Project</div>
+    <div class="w-50 mx-auto bg-light text-center caption border">
+        Bank Project:
+        dashboard Page.
+    </div>
+    <div class="lead text-center">Brought to you by Neil (np656) from section IS601-004</div>
+    <div class="lead text-center"> 
+        <a href="{{ url_for('accounts.create_account') }}" class="btn btn-primary btn-lg">Create Account</a>
+        <a href="{{ url_for('accounts.my_account') }}" class="btn btn-primary btn-lg">My Account</a>
+        <a href="{{ url_for('accounts.deposit') }}" class="btn btn-primary btn-lg">Deposit</a>
+        <a href="{{ url_for('accounts.withdraw') }}" class="btn btn-primary btn-lg">Withdraw</a>
+        <a href="{{ url_for('accounts.transfer') }}" class="btn btn-primary btn-lg">Transfer</a>
+    </div>
+</div>
+{% endblock %}
