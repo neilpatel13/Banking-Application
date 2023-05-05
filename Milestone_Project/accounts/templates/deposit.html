@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Deposit{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="container-fluid">
+    <div class="h3 mb-4">Deposit</div>
+    <form method="POST" class="p-4 border rounded-lg">
+        {{ form.hidden_tag() }}
+        <div class="form-group mb-3">
+            <label for="{{ form.account.id }}"></label>
+            {{ render_field(form.account, class="form-control") }}
+        </div>
+        <div class="form-group mb-3">
+            <label for="{{ form.amount.id }}"></label>
+            {{ render_field(form.amount, class="form-control") }}
+        </div>
+        <div class="form-group mb-3">
+            <label for="{{ form.memo.id }}"></label>
+            {{ render_field(form.memo, class="form-control") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+<style>
+    .h3 {
+        color: #007bff;
+        font-weight: bold;
+    }
+    form {
+        background-color: #f8f9fa;
+    }
+    label {
+        font-weight: bold;
+        color: #6c757d;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Transfer{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="container-fluid">
+    <style>
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 2px solid #ca2a2a;
+            border-top: none;
+        }
+        /* Show the tab content */
+        .tabcontent.show {display: block;}
+        .nav-item {    cursor: pointer;}
+    </style>
+    <div class="h3">Transfer</div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a data-toggle="tab1" class="nav-link active" onclick="openTab(event)">
+                Transfer To Self
+            </a>
+        </li>
+        <li class="nav-item">
+            <a data-toggle="tab2" class="nav-link" onclick="openTab(event)">
+                Transfer To Other User
+            </a>
+        </li>
+    </ul>
+    <div>
+        <div id="tab1" class="tabcontent show">
+            <p>Transfer funds from one of your account to another</p>
+            <div>
+                <form method="POST">
+                    <input type="hidden" name="transfer-type" value="self">
+                    {{ self_form.hidden_tag() }}
+                    {{render_field(self_form.src_account_number)}}
+                    {{render_field(self_form.dest_account_number)}}
+                    {{render_field(self_form.amount)}}
+                    {{render_field(self_form.memo)}}
+                    {{self_form.submit(class="btn btn-primary my-3")}}
+                </form>
+            </div>
+        </div>
+        <div id="tab2" class="tabcontent">
+            <p>Transfer funds from one of your account to another user's account</p>
+            <div>
+                <form method="POST">
+                    <input type="hidden" name="transfer-type" value="other">
+                    {{ other_user_form.hidden_tag() }}
+                    {{render_field(other_user_form.src_account_number)}}
+                    {{render_field(other_user_form.account_number_ending)}}
+                    {{render_field(other_user_form.last_name)}}
+                    {{render_field(other_user_form.amount)}}
+                    {{render_field(other_user_form.memo)}}
+                    {{other_user_form.submit(class="btn btn-primary my-3")}}
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
