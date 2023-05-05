@@ -56,8 +56,6 @@ def create_account():
                 print(e)
     return render_template("create_account.html", form=form)
 
-
-
 @accounts.route("/my_account", methods=["GET", "POST"])
 @login_required
 def my_account():
