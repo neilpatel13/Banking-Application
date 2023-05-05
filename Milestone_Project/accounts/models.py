@@ -13,7 +13,7 @@ class Account(JsonSerializable):
         if change > 0:
             # first of the pair should be negative
             change *= -1
-        query = """INSERT INTO FROM IS601_Bank_Transaction (account_src, account_dest, balance_change, transaction_type, memo) VALUES (%s, %s, %s, %s, %s)"""
+        query = """INSERT INTO FROM IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo) VALUES (%s, %s, %s, %s, %s)"""
         pairs = []
         pairs.append((account_src, account_dest, change, transaction_type, memo))
         pairs.append((account_dest, account_src, change * -1, transaction_type, memo))
@@ -31,10 +31,10 @@ class Account(JsonSerializable):
     def __update__balance(self):
         from sql.db import DB
         try:
-            result = DB.update("""UPDATE IS601_S_Accounts set balance = (SELECT IFNULL(SUM(balance_change), 0) FROM IS601_Bank_Transaction WHERE account_src = %(acct)s)WHERE id = %(acct)s
+            result = DB.update("""UPDATE IS601_Accounts set balance = (SELECT IFNULL(SUM(balance_change), 0) FROM IS601_Bank_Transaction WHERE account_src = %(acct)s)WHERE id = %(acct)s
             """, {"acct":int(self.id)})
             if result.status:
-                result = DB.selectOne("SELECT balance FROM IS601_S_Accounts WHERE id = %s", self.id)
+                result = DB.selectOne("SELECT balance FROM IS601_Accounts WHERE id = %s", self.id)
                 if result.status and result.row:
                     self.balance = result.row["balance"]
                     from flask import session
