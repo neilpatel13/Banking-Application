@@ -1,5 +1,7 @@
 from common.utils import JsonSerializable
 from sql.db import DB
+#Neil Patel UCID: NP656 DOC: 5/3
+
 class Account(JsonSerializable):
     def __init__(self, id = -1, balance = 0):
         self.id = id
@@ -17,7 +19,8 @@ class Account(JsonSerializable):
         pairs = []
         pairs.append((account_src, account_dest, change, transaction_type, memo))
         pairs.append((account_dest, account_src, change * -1, transaction_type, memo))
-        try:
+        try:#Neil Patel UCID: NP656 DOC: 5/3
+
             result = DB.insertMany(query, pairs)
             if result.status:
                 print("Recored transations pairs", account_src, account_src, change, transaction_type, memo)
@@ -30,8 +33,9 @@ class Account(JsonSerializable):
         return False
     def __update__balance(self):
         from sql.db import DB
-        try:
-            result = DB.update("""UPDATE IS601_Accounts set balance = (SELECT IFNULL(SUM(balance_change), 0) FROM IS601_Bank_Transaction WHERE account_src = %(acct)s)WHERE id = %(acct)s
+        try:#Neil Patel UCID: NP656 DOC: 5/5
+
+            result = DB.update("""UPDATE IS601_Accounts set balance = (SELECT IFNULL(SUM(balance_change), 0) FROM IS601_TransactionHistory WHERE account_src = %(acct)s)WHERE id = %(acct)s
             """, {"acct":int(self.id)})
             if result.status:
                 result = DB.selectOne("SELECT balance FROM IS601_Accounts WHERE id = %s", self.id)
@@ -45,3 +49,4 @@ class Account(JsonSerializable):
             print("Error updating balance", e)
             DB.getDB().rollback()
         return False
+    #Neil Patel UCID: NP656 DOC: 5/3

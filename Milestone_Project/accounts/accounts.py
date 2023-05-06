@@ -7,7 +7,7 @@ import random
 from accounts.forms import (AccountCreateForm,DepositForm,TransferForm,TransferToOtherUserForm,WithdrawalForm,)
 accounts = Blueprint(
     "accounts", __name__, url_prefix="/accounts", template_folder="templates"
-)
+)#Neil Patel UCID: NP656 DOC: 5/3
 world_Account = "000000000000"
 @accounts.route("/create_account", methods=["GET", "POST"])
 @login_required
@@ -23,7 +23,7 @@ def create_account():
             # Get account type and initial deposit from form
             account_type = form.account_type.data
             initial_deposit = form.initial_deposit.data
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # Generate random 12 digit account number that isn't previously used
             account_number = "".join([str(random.randint(0, 9)) for i in range(12)])
             try:
@@ -32,9 +32,9 @@ def create_account():
                     VALUES (%s, %s, %s, %s)""", account_number, account_type, initial_deposit, current_user.id,)
                 # Create  transaction entries for the user initial deposit
                 world_account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s", world_Account).row
-                
+                #Neil Patel UCID: NP656 DOC: 5/3
                 user_account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s", account_number ).row
-                
+                #Neil Patel UCID: NP656 DOC: 5/3
                 DB.insertOne("""
                 INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, 
                 expected_total, created, modified)
@@ -43,7 +43,7 @@ def create_account():
                 
                 DB.insertOne("""INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, expected_total, created, modified)
                 VALUES (%s, %s,%s, %s,%s, %s,%s, %s )""",user_account["id"],world_account["id"],initial_deposit,"deposit","Initial deposit to acc no " + account_number,initial_deposit,datetime.utcnow(),datetime.utcnow())
-
+#Neil Patel UCID: NP656 DOC: 5/3
                 # update system account balance
                 DB.update( """UPDATE IS601_Accounts SET balance = balance - %s  WHERE account_number = %s
                 """, initial_deposit,world_Account)
@@ -55,14 +55,14 @@ def create_account():
                 flash("Account not created", "danger")
                 print(e)
     return render_template("create_account.html", form=form)
-
+#Neil Patel UCID: NP656 DOC: 5/3
 @accounts.route("/my_account", methods=["GET", "POST"])
 @login_required
 def my_account():
     accounts = DB.selectAll("SELECT * FROM IS601_Accounts WHERE user_id=%s LIMIT 10", current_user.id).rows
     return render_template("my_account.html", accounts=accounts)
 
-
+#Neil Patel UCID: NP656 DOC: 5/3
 @accounts.route("/details/<account_number>")
 @login_required
 def account_details(account_number):
@@ -75,27 +75,27 @@ def account_details(account_number):
     start_date = request.args.get("from_date")
     end_date = request.args.get("to_date")
     page = int(request.args.get("page") or 1)
-
+#Neil Patel UCID: NP656 DOC: 5/3
     # Filter Transactions
     if transaction_type:
         transaction_history = [hist for hist in transaction_history if hist["transaction_type"].lower() == transaction_type.lower()]
-
+#Neil Patel UCID: NP656 DOC: 5/3
     if start_date and end_date:
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.strptime(end_date, "%Y-%m-%d")
         
         transaction_history = [ hist for hist in transaction_history if start_date <= hist["created"] <= end_date ]
-
+#Neil Patel UCID: NP656 DOC: 5/3
     elif start_date:
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
         transaction_history = [hist for hist in transaction_history if start_date <= hist["created"]]
-
+#Neil Patel UCID: NP656 DOC: 5/3
     elif end_date:
         transaction_history = [hist for hist in transaction_history if hist["created"] <= end_date]
 
     # render template with account details and transaction history
     return render_template("account_details.html",account_details=account,paginator=Pagination(transaction_history, page, 10))
-
+#Neil Patel UCID: NP656 DOC: 5/3
 
 @accounts.route("/withdraw", methods=["GET", "POST"])
 @login_required
@@ -103,19 +103,19 @@ def withdraw():
     form = WithdrawalForm()
     # Populate the account choices for the form
     accounts = DB.selectAll("SELECT * FROM IS601_Accounts WHERE user_id=%s AND account_number!=%s", current_user.id, world_Account).rows
-    
+    #Neil Patel UCID: NP656 DOC: 5/3
     form.account.choices = [(account["account_number"], account["account_number"]) for account in accounts]
-
+#Neil Patel UCID: NP656 DOC: 5/3
     if request.method == "POST" and form.validate_on_submit():
         try:
             account_number = form.account.data
             amount = form.amount.data
             memo = form.memo.data
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # Retrieve the account and world account objects
             account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s",account_number).row
             world_account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s", world_Account).row
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # Check that the account has enough balance
             if account["balance"] < amount:
                 flash(f"You Can Not Withdraw More Than Your Balance! Balance: ${account['balance']} ", "danger")
@@ -124,14 +124,14 @@ def withdraw():
                     f"You Can Not Withdraw More Than Your Balance. Your balance is {account['balance']} "
                 )'''
                 return render_template("withdraw.html", form=form)
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # Create the transaction pair
             DB.insertOne("""INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, expected_total, created, modified)
                     VALUES (%s, %s,%s, %s,%s, %s,%s, %s ) """,account["id"], world_account["id"],-amount,"withdraw",memo,account["balance"] - amount, datetime.utcnow(), datetime.utcnow())
-            
+            #Neil Patel UCID: NP656 DOC: 5/3
             DB.insertOne("""INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, expected_total, created, modified)
                     VALUES (%s, %s,%s, %s,%s, %s,%s, %s )""", world_account["id"], account["id"], amount, "withdraw", memo, world_account["balance"] + amount, datetime.utcnow(), datetime.utcnow(),)
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # update  account balance
             # Since its a withdrawal, we increment world account balance and
             # decrease user account balance
@@ -146,7 +146,7 @@ def withdraw():
             flash("Withdrawal was not successful!, try again", "danger")
     return render_template("withdraw.html", form=form)
 
-
+#Neil Patel UCID: NP656 DOC: 5/3
 @accounts.route("/deposit", methods=["GET", "POST"])
 @login_required
 def deposit():
@@ -155,7 +155,7 @@ def deposit():
     accounts = DB.selectAll("SELECT * FROM IS601_Accounts WHERE user_id=%s AND account_number!=%s",  current_user.id, world_Account).rows
     
     form.account.choices = [(account["account_number"], account["account_number"]) for account in accounts]
-
+#Neil Patel UCID: NP656 DOC: 5/3
     if request.method == "POST" and form.validate_on_submit():
         try:
             account_number = form.account.data
@@ -172,7 +172,7 @@ def deposit():
             
             DB.insertOne("""INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, expected_total, created, modified)
                     VALUES (%s, %s,%s, %s,%s, %s,%s, %s )""", world_account["id"], account["id"], -amount,"deposit", memo, world_account["balance"] - amount, datetime.utcnow(), datetime.utcnow())
-
+#Neil Patel UCID: NP656 DOC: 5/3
             # update  account balance
             # Since its a deposital, we increment world account balance and
             # decrease user account balance
@@ -185,28 +185,22 @@ def deposit():
             flash("Failed to deposit!", "danger")
     return render_template("deposit.html", form=form)
 
-
+#Neil Patel UCID: NP656 DOC: 5/3
 @accounts.route("/transfer/", methods=["GET", "POST"])
 @login_required
 def transfer():
     self_form = TransferForm()
     other_user_form = TransferToOtherUserForm()
-
+#Neil Patel UCID: NP656 DOC: 5/3
     # Populate the account choices for the form
-    accounts = DB.selectAll(
-        "SELECT * FROM IS601_Accounts WHERE user_id=%s AND account_number!=%s",
-        current_user.id,
-        world_Account,
-    ).rows
-    self_form.src_account_number.choices = [
-        (account["account_number"], account["account_number"]) for account in accounts
-    ]
+    accounts = DB.selectAll("SELECT * FROM IS601_Accounts WHERE user_id=%s AND account_number!=%s", current_user.id,world_Account,).rows
+    self_form.src_account_number.choices = [(account["account_number"], account["account_number"]) for account in accounts]
     self_form.dest_account_number.choices = [
         (account["account_number"], account["account_number"]) for account in accounts
-    ]
+    ]#Neil Patel UCID: NP656 DOC: 5/3
     other_user_form.src_account_number.choices = [
         (account["account_number"], account["account_number"]) for account in accounts
-    ]
+    ]#Neil Patel UCID: NP656 DOC: 5/3
     transfer_type = None
     if request.method == "POST":
         transfer_type = request.form.get("transfer-type")
@@ -215,7 +209,7 @@ def transfer():
             if transfer_type == "other"
             else self_form.validate_on_submit()
         )
-        if is_valid:
+        if is_valid:#Neil Patel UCID: NP656 DOC: 5/3
             try:
                 if transfer_type == "other":
                     src_account_number = other_user_form.src_account_number.data
@@ -231,7 +225,7 @@ def transfer():
                     dest_account_number = account_to.row["account_number"]
                     amount = other_user_form.amount.data
                     memo = other_user_form.memo.data
-
+#Neil Patel UCID: NP656 DOC: 5/3
                 else:
                     src_account_number = self_form.src_account_number.data
                     dest_account_number = self_form.dest_account_number.data
@@ -245,7 +239,7 @@ def transfer():
                 # Retrieve the account and world account objects
                 from_account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s",src_account_number).row
                 to_account = DB.selectOne("SELECT * FROM IS601_Accounts WHERE account_number=%s",dest_account_number).row
-
+#Neil Patel UCID: NP656 DOC: 5/3
                 # Check that the account has enough balance
                 if from_account["balance"] < amount:
                     form = other_user_form if transfer_type == "other" else self_form
@@ -261,7 +255,7 @@ def transfer():
                             INSERT INTO IS601_TransactionHistory (account_src, account_dest, balance_change, transaction_type, memo, expected_total, created, modified)
                             VALUES (%s, %s,%s, %s,%s, %s,%s, %s )""",
                             to_account["id"], from_account["id"],amount, "transfer", memo, to_account["balance"] + amount, datetime.utcnow(),datetime.utcnow())
-
+#Neil Patel UCID: NP656 DOC: 5/3
                 # update  account balance
                 # Since its a withdrawal, we increment world account balance and
                 # decrease user account balance
@@ -277,3 +271,4 @@ def transfer():
 
     return render_template("transfer.html", self_form=self_form, other_user_form=other_user_form, transfer_type=transfer_type)
 
+#Neil Patel UCID: NP656 DOC: 5/3
