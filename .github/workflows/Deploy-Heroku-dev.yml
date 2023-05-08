@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - dev
-      - DeploymentSetup
-      - Flask-Sample-PyTest
 
 # Your workflows jobs.
 jobs:
@@ -16,9 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_URL: ${{secrets.DB_URL}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
       PORT: 8080
       # change to the project directory you're deploying
-      WORKING_DIRECTORY: flask_sample
+      WORKING_DIRECTORY: Milestone_Project
     defaults:
       run:
           working-directory: ${{env.WORKING_DIRECTORY}}

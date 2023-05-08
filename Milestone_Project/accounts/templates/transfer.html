@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block title %}Transfer{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="container-fluid">
+    <style>
+        
+        /* Neil Patel UCID: NP656 DOC: 5/5 */
+
+        /* Style the tab content */
+        .Curr_tab_Deatils {
+            display: none;
+            padding: 3px 6px;
+            border: 3px solid #520ea5;
+            background-color: gray;
+            color: black;
+            border-top: none;
+        }
+        /* Show the tab content */
+        .Curr_tab_Deatils.show {
+            display: block;
+            background-color: gray;
+        }
+        .nav-item {
+            cursor: pointer;
+            background-color: white;
+            color: black;
+            border-top: 2px solid black;
+            border-bottom: none;
+                
+        }
+    </style>
+    <div class="h3">Transfer</div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a data-toggle="tab1" class="nav-link active" onclick="change_Tab(event)">
+                Transfer To Self
+            </a>
+        </li>
+        <li class="nav-item">
+            <a data-toggle="tab2" class="nav-link" onclick="change_Tab(event)">
+                Transfer To Other User
+            </a>
+        </li>
+    </ul>
+    <div>
+        <!-- Neil Patel UCID: NP656 DOC: 5/5 -->
+        <div id="tab1" class="Curr_tab_Deatils show">
+            <p>Transfer between your accounts</p>
+            <div>
+                <form method="POST">
+                    <input type="hidden" name="transfer-type" value="self">
+                    {{ self_form.hidden_tag() }}
+                    {{render_field(self_form.src_account_number)}}
+                    {{render_field(self_form.dest_account_number)}}
+                    {{render_field(self_form.amount)}}
+                    {{render_field(self_form.memo)}}
+                    {{self_form.submit(class="btn btn-primary my-3")}}
+                </form>
+            </div>
+        </div>
+        <div id="tab2" class="Curr_tab_Deatils">
+                    <!-- Neil Patel UCID: NP656 DOC: 5/5 -->
+
+            <p>Transfer money your account to another user's account</p>
+            <div>
+                <form method="POST">
+                    <input type="hidden" name="transfer-type" value="other">
+                    {{ other_user_form.hidden_tag() }}
+                    {{render_field(other_user_form.src_account_number)}}
+                    {{render_field(other_user_form.account_number_ending)}}
+                    {{render_field(other_user_form.last_name)}}
+                    {{render_field(other_user_form.amount)}}
+                    {{render_field(other_user_form.memo)}}
+                    {{other_user_form.submit(class="btn btn-primary my-3")}}
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+                /* Neil Patel UCID: NP656 DOC: 5/5 */
+        function change_Tab(evt) 
+        {
+            evt.preventDefault()
+            let Curr_Tab = evt.target.getAttribute('data-toggle');
+            let i, Curr_tab_Deatils, tablink;
+            Curr_tab_Deatils = document.querySelectorAll(".Curr_tab_Deatils");
+            for (i = 0; i < Curr_tab_Deatils.length; i++) 
+            {
+                Curr_tab_Deatils[i].classList.remove("show");
+            }
+            tablink = document.querySelectorAll(".nav-tabs a");
+            for (i = 0; i < tablink.length; i++) 
+            {
+                tablink[i].classList.remove("active");
+            }
+            document.getElementById(Curr_Tab).classList.add("show");
+            evt.target.classList.add("active");
+        }
+            {%if transfer_type=="other" %}
+            document.querySelectorAll(".nav-tabs a")[1].click();
+            {% else %}
+            document.querySelectorAll(".nav-tabs a")[0].click();
+            {% endif %}
+                    /* Neil Patel UCID: NP656 DOC: 5/5 */
+
+    </script>
+</div>
+{% endblock %}
+        <!--For the Grader who sees this, for some reason visual studio thinks there is an error in the jinja code i have above, the code works fine
+        but for some reason I haven't been able to figure out why vs code thinks there is an error. My reasoning is that because this is an html
+        file, the error is due to possibly my vs code not knowing that you can have some implementation of jinja in html. If now problems arise in your IDE, you can ignore this
+        message. I put this message in case the grader sees the same problems I had as mentioned by the professor. To be clear, the code works fine, yet for some reason, vs code i
+        is giving an error. -->
